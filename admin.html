@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DONPISO · Panel de Administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:  #2E8B57;
+      --green2: #4CAF50;
+      --dark:   #333333;
+      --mid:    #666;
+      --off:    #F5F5F5;
+      --white:  #fff;
+      --red:    #e53935;
+      --orange: #FF6B35;
+    }
+    body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: var(--dark); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: 'Inter', sans-serif; }
+
+    /* ── LOGIN ── */
+    #loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #1B5E20 0%, #2E8B57 60%, #4CAF50 100%); padding: 24px; }
+    .login-card { background: #fff; border-radius: 16px; padding: 48px 40px; max-width: 420px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,.25); }
+    .login-logo { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; color: var(--green); text-align: center; margin-bottom: 6px; }
+    .login-sub { font-size: 13px; color: var(--mid); text-align: center; margin-bottom: 36px; }
+    .login-label { display: block; font-size: 12px; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 6px; }
+    .login-input { width: 100%; padding: 12px 16px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border-color .2s; margin-bottom: 18px; }
+    .login-input:focus { border-color: var(--green); }
+    .btn-login { width: 100%; padding: 14px; background: var(--green); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; font-family: 'Poppins', sans-serif; transition: background .2s; }
+    .btn-login:hover { background: var(--green2); }
+    .btn-login:disabled { opacity: .6; cursor: not-allowed; }
+    .login-error { background: #fdecea; color: var(--red); font-size: 13px; padding: 10px 14px; border-radius: 6px; margin-top: 14px; display: none; }
+
+    /* ── ADMIN LAYOUT ── */
+    #adminScreen { display: none; min-height: 100vh; }
+    .admin-topbar { background: #fff; border-bottom: 3px solid var(--green); height: 64px; display: flex; align-items: center; padding: 0 28px; gap: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+    .admin-topbar-logo { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; color: var(--green); }
+    .admin-topbar-title { font-size: 14px; color: var(--mid); font-weight: 500; }
+    .admin-topbar-spacer { flex: 1; }
+    .btn-logout { padding: 9px 20px; background: transparent; border: 2px solid var(--red); color: var(--red); border-radius: 6px; font-size: 13px; font-weight: 700; transition: all .2s; }
+    .btn-logout:hover { background: var(--red); color: #fff; }
+
+    .admin-body { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ── STATS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
+    .stat-card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,.05); border-left: 4px solid var(--green); }
+    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--mid); margin-bottom: 8px; }
+    .stat-val { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: var(--green); }
+
+    /* ── TOOLBAR ── */
+    .admin-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .admin-toolbar h2 { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: var(--dark); }
+    .btn-new { padding: 11px 24px; background: var(--green); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; transition: background .2s; display: flex; align-items: center; gap: 8px; }
+    .btn-new:hover { background: var(--green2); }
+
+    /* ── TABLE ── */
+    .table-wrap { background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,.05); overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 860px; }
+    thead { background: #f8f9fa; }
+    thead th { padding: 14px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--mid); text-align: left; white-space: nowrap; border-bottom: 2px solid #eee; }
+    tbody tr { border-bottom: 1px solid #f0f0f0; transition: background .15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8fff8; }
+    tbody tr.destacada { background: #fffde7; }
+    tbody tr.destacada:hover { background: #fff9c4; }
+    td { padding: 12px 16px; font-size: 13px; color: var(--dark); vertical-align: middle; }
+    .td-img { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; background: #e8f5e9; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .td-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+    .td-img-placeholder { width: 60px; height: 60px; border-radius: 6px; background: #e8f5e9; display: flex; align-items: center; justify-content: center; }
+    .td-img-placeholder svg { width: 24px; height: 24px; stroke: rgba(46,139,87,.4); fill: none; stroke-width: 1.5; }
+    .td-titulo { font-weight: 600; color: var(--green); max-width: 220px; }
+    .td-precio { font-family: 'Poppins', sans-serif; font-weight: 700; color: #1B5E20; white-space: nowrap; }
+    .badge-tipo { display: inline-block; background: #e8f5e9; color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+    .toggle { position: relative; display: inline-block; width: 40px; height: 22px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 22px; transition: .2s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+    input:checked + .toggle-slider { background: var(--green); }
+    input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* ── ACTION BUTTONS ── */
+    .btn-edit { padding: 7px 14px; background: transparent; border: 2px solid var(--green); color: var(--green); border-radius: 6px; font-size: 12px; font-weight: 700; transition: all .2s; }
+    .btn-edit:hover { background: var(--green); color: #fff; }
+    .btn-del { padding: 7px 14px; background: transparent; border: 2px solid var(--red); color: var(--red); border-radius: 6px; font-size: 12px; font-weight: 700; transition: all .2s; margin-left: 6px; }
+    .btn-del:hover { background: var(--red); color: #fff; }
+    .td-actions { white-space: nowrap; }
+
+    /* ── MODAL FORM ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,.55); overflow-y: auto; padding: 24px 16px; }
+    .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal-form { background: #fff; border-radius: 14px; max-width: 780px; width: 100%; margin: auto; box-shadow: 0 24px 80px rgba(0,0,0,.25); overflow: hidden; }
+    .modal-form-header { background: var(--green); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .modal-form-header h3 { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
+    .modal-form-close { width: 32px; height: 32px; background: rgba(255,255,255,.2); border: none; border-radius: 50%; color: #fff; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
+    .modal-form-close:hover { background: rgba(255,255,255,.35); }
+    .modal-form-body { padding: 28px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 12px; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .7px; }
+    .form-group input, .form-group select, .form-group textarea { padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border-color .2s; background: #fff; color: var(--dark); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--green); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .form-check-row { display: flex; align-items: center; gap: 28px; }
+    .form-check { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--dark); cursor: pointer; }
+    .form-check input { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .img-preview { width: 100%; height: 180px; border-radius: 8px; overflow: hidden; margin-top: 8px; position: relative; background: #f0f0f0; }
+    .img-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+    .img-preview-placeholder { font-size: 12px; color: #bbb; }
+    .modal-form-footer { padding: 20px 28px; border-top: 1px solid #eee; display: flex; gap: 12px; justify-content: flex-end; }
+    .btn-cancel { padding: 11px 24px; background: transparent; border: 2px solid #ddd; color: var(--mid); border-radius: 8px; font-size: 14px; font-weight: 600; transition: all .2s; }
+    .btn-cancel:hover { border-color: #bbb; color: var(--dark); }
+    .btn-save { padding: 11px 28px; background: var(--green); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; font-family: 'Poppins', sans-serif; transition: background .2s; }
+    .btn-save:hover { background: var(--green2); }
+    .btn-save:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* ── TOAST ── */
+    #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); z-index: 600; background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 8px 30px rgba(0,0,0,.2); transition: transform .3s ease; white-space: nowrap; }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.success { background: var(--green); }
+    #toast.error { background: var(--red); }
+
+    /* ── LOADING OVERLAY ── */
+    .loading-bar { height: 3px; background: linear-gradient(90deg, var(--green) 0%, var(--green2) 50%, var(--green) 100%); background-size: 200% 100%; animation: loadbar 1.2s linear infinite; display: none; }
+    .loading-bar.active { display: block; }
+    @keyframes loadbar { 0% { background-position: 0 0; } 100% { background-position: 200% 0; } }
+
+    /* ── EMPTY STATE ── */
+    .table-empty { padding: 60px 20px; text-align: center; color: #aaa; font-size: 14px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .admin-body { padding: 20px 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .admin-topbar { padding: 0 16px; }
+      .admin-topbar-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">DONPISO</div>
+    <p class="login-sub">Panel de Administración</p>
+    <form id="loginForm" autocomplete="on">
+      <label class="login-label" for="loginEmail">Correo electrónico</label>
+      <input class="login-input" type="email" id="loginEmail" name="email" placeholder="admin@donpiso.com" required autocomplete="email">
+      <label class="login-label" for="loginPass">Contraseña</label>
+      <input class="login-input" type="password" id="loginPass" name="password" placeholder="••••••••" required autocomplete="current-password">
+      <button class="btn-login" type="submit" id="btnLogin">Iniciar sesión</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ── ADMIN SCREEN ── -->
+<div id="adminScreen">
+  <div class="loading-bar" id="loadingBar"></div>
+  <header class="admin-topbar">
+    <span class="admin-topbar-logo">DONPISO</span>
+    <span class="admin-topbar-title">Panel de Administración</span>
+    <div class="admin-topbar-spacer"></div>
+    <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
+  </header>
+
+  <div class="admin-body">
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total propiedades</div>
+        <div class="stat-val" id="statTotal">—</div>
+      </div>
+      <div class="stat-card" style="border-left-color:#4CAF50;">
+        <div class="stat-label">Activas</div>
+        <div class="stat-val" id="statActivas" style="color:#4CAF50;">—</div>
+      </div>
+      <div class="stat-card" style="border-left-color:#FF6B35;">
+        <div class="stat-label">Destacadas</div>
+        <div class="stat-val" id="statDestacadas" style="color:#FF6B35;">—</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="admin-toolbar">
+      <h2>Propiedades</h2>
+      <button class="btn-new" id="btnNew">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva propiedad
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table id="propsTable">
+          <thead>
+            <tr>
+              <th>Imagen</th>
+              <th>Título</th>
+              <th>Tipo</th>
+              <th>Precio</th>
+              <th>Activo</th>
+              <th>Destacado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="propsTableBody">
+            <tr><td colspan="7" class="table-empty">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL FORM ── -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal-form">
+    <div class="modal-form-header">
+      <h3 id="formModalTitle">Nueva propiedad</h3>
+      <button class="modal-form-close" id="formModalClose" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-form-body">
+      <form id="propForm">
+        <input type="hidden" id="fieldId">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="fieldTitulo">Título *</label>
+            <input type="text" id="fieldTitulo" placeholder="Ej: Piso en venta en Garrucha" required>
+          </div>
+          <div class="form-group">
+            <label for="fieldTipo">Tipo *</label>
+            <select id="fieldTipo" required>
+              <option value="">Seleccionar…</option>
+              <option>Piso</option>
+              <option>Dúplex</option>
+              <option>Chalet adosado</option>
+              <option>Local</option>
+              <option>Terreno</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fieldUbicacion">Ubicación *</label>
+            <input type="text" id="fieldUbicacion" placeholder="Ej: Garrucha, Almería" required>
+          </div>
+          <div class="form-group">
+            <label for="fieldPrecio">Precio (€) *</label>
+            <input type="number" id="fieldPrecio" placeholder="165000" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="fieldMetros">Metros (m²)</label>
+            <input type="number" id="fieldMetros" placeholder="120" min="0">
+          </div>
+          <div class="form-group">
+            <label for="fieldHabitaciones">Habitaciones</label>
+            <input type="number" id="fieldHabitaciones" placeholder="3" min="0">
+          </div>
+          <div class="form-group">
+            <label for="fieldBanos">Baños</label>
+            <input type="number" id="fieldBanos" placeholder="2" min="0">
+          </div>
+          <div class="form-group full">
+            <label for="fieldDesc">Descripción</label>
+            <textarea id="fieldDesc" placeholder="Descripción completa de la propiedad…" rows="4"></textarea>
+          </div>
+          <div class="form-group full">
+            <label for="fieldCaract">Características <span style="font-weight:400;text-transform:none;letter-spacing:0;">(una por línea)</span></label>
+            <textarea id="fieldCaract" placeholder="Garaje&#10;Terraza&#10;Piscina&#10;Aire acondicionado" rows="4"></textarea>
+          </div>
+          <div class="form-group full">
+            <label>Imagen de la propiedad</label>
+            <div id="imgDropZone" style="border:2px dashed #ddd;border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;background:#fafafa;" onclick="document.getElementById('fieldImagenFile').click()" ondragover="event.preventDefault();this.style.borderColor='#2E8B57'" ondragleave="this.style.borderColor='#ddd'" ondrop="handleImageDrop(event)">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 8px;display:block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p style="font-size:13px;color:#aaa;margin:0;" id="imgDropText">Haz clic para subir una imagen o arrástrala aquí</p>
+              <p style="font-size:11px;color:#ccc;margin-top:4px;">JPG, PNG, WEBP · Máx. 5 MB</p>
+            </div>
+            <input type="file" id="fieldImagenFile" accept="image/*" style="display:none" onchange="handleImageFile(this.files[0])">
+            <input type="hidden" id="fieldImagen">
+            <div class="img-preview" id="imgPreview" style="display:none;">
+              <img id="imgPreviewImg" alt="Preview" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">
+              <button type="button" onclick="clearImage()" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+            </div>
+            <div id="imgUploadProgress" style="display:none;margin-top:8px;font-size:12px;color:#2E8B57;font-weight:600;">Subiendo imagen…</div>
+          </div>
+          <div class="form-group full">
+            <div class="form-check-row">
+              <label class="form-check">
+                <input type="checkbox" id="fieldActivo" checked>
+                Activo (visible en la web)
+              </label>
+              <label class="form-check">
+                <input type="checkbox" id="fieldDestacado">
+                Destacado
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-form-footer">
+      <button class="btn-cancel" id="btnCancelForm">Cancelar</button>
+      <button class="btn-save" id="btnSaveForm">Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // SUPABASE CONFIG
+  // ─────────────────────────────────────────────
+  const SUPABASE_URL = 'https://srbmwxrptetpizcrmmel.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyYm13eHJwdGV0cGl6Y3JtbWVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDEyMzEsImV4cCI6MjA5MjAxNzIzMX0.yUx8Ljt4orIqEKoXGIdi0mcKTJ6rKrXvRg7TJrKHvpQ';
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ─────────────────────────────────────────────
+  // HELPERS
+  // ─────────────────────────────────────────────
+  function fmtPrice(n) { return Number(n).toLocaleString('es-ES') + ' €'; }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show ' + type;
+    clearTimeout(t._timeout);
+    t._timeout = setTimeout(() => { t.className = ''; }, 3200);
+  }
+
+  function setLoading(on) {
+    document.getElementById('loadingBar').classList.toggle('active', on);
+  }
+
+  // ─────────────────────────────────────────────
+  // AUTH
+  // ─────────────────────────────────────────────
+  async function checkAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) showAdmin();
+    else showLogin();
+  }
+
+  function showLogin() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminScreen').style.display = 'none';
+  }
+
+  function showAdmin() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    loadProps();
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnLogin');
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Iniciando sesión…';
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) {
+      errEl.textContent = 'Credenciales incorrectas. Por favor, inténtalo de nuevo.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Iniciar sesión';
+    } else {
+      showAdmin();
+    }
+  });
+
+  document.getElementById('btnLogout').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    showLogin();
+  });
+
+  // ─────────────────────────────────────────────
+  // LOAD PROPERTIES
+  // ─────────────────────────────────────────────
+  let allAdminProps = [];
+
+  async function loadProps() {
+    setLoading(true);
+    const { data, error } = await sb.from('propiedades').select('*')
+      .order('destacado', { ascending: false })
+      .order('created_at', { ascending: false });
+    setLoading(false);
+    if (error) { showToast('Error al cargar propiedades', 'error'); return; }
+    allAdminProps = data || [];
+    renderStats();
+    renderTable();
+  }
+
+  function renderStats() {
+    document.getElementById('statTotal').textContent = allAdminProps.length;
+    document.getElementById('statActivas').textContent = allAdminProps.filter(p => p.activo).length;
+    document.getElementById('statDestacadas').textContent = allAdminProps.filter(p => p.destacado).length;
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('propsTableBody');
+    if (!allAdminProps.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="table-empty">No hay propiedades. Crea la primera.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = allAdminProps.map(p => {
+      const imgCell = p.imagen_url
+        ? `<div class="td-img"><img src="${p.imagen_url}" alt="${p.titulo}" loading="lazy" onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\'><path d=\'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\'/></svg>'"></div>`
+        : `<div class="td-img-placeholder"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>`;
+      return `<tr class="${p.destacado ? 'destacada' : ''}" data-id="${p.id}">
+        <td>${imgCell}</td>
+        <td class="td-titulo">${p.titulo}</td>
+        <td><span class="badge-tipo">${p.tipo}</span></td>
+        <td class="td-precio">${fmtPrice(p.precio)}</td>
+        <td>
+          <label class="toggle" title="${p.activo ? 'Activo' : 'Inactivo'}">
+            <input type="checkbox" ${p.activo ? 'checked' : ''} onchange="toggleField('${p.id}','activo',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </td>
+        <td>
+          <label class="toggle" title="${p.destacado ? 'Destacado' : 'No destacado'}">
+            <input type="checkbox" ${p.destacado ? 'checked' : ''} onchange="toggleField('${p.id}','destacado',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </td>
+        <td class="td-actions">
+          <button class="btn-edit" onclick="openEditModal('${p.id}')">Editar</button>
+          <button class="btn-del" onclick="deleteProp('${p.id}')">Eliminar</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ─────────────────────────────────────────────
+  // TOGGLE FIELD (activo / destacado)
+  // ─────────────────────────────────────────────
+  async function toggleField(id, field, val) {
+    setLoading(true);
+    const { error } = await sb.from('propiedades').update({ [field]: val }).eq('id', id);
+    setLoading(false);
+    if (error) { showToast('Error al actualizar', 'error'); return; }
+    const p = allAdminProps.find(x => x.id === id);
+    if (p) p[field] = val;
+    renderStats();
+    renderTable();
+    showToast(field === 'activo' ? (val ? 'Propiedad activada' : 'Propiedad desactivada') : (val ? 'Marcada como destacada' : 'Quitada de destacadas'));
+  }
+
+  // ─────────────────────────────────────────────
+  // DELETE
+  // ─────────────────────────────────────────────
+  async function deleteProp(id) {
+    const p = allAdminProps.find(x => x.id === id);
+    if (!confirm(`¿Eliminar "${p ? p.titulo : 'esta propiedad'}"? Esta acción no se puede deshacer.`)) return;
+    setLoading(true);
+    const { error } = await sb.from('propiedades').delete().eq('id', id);
+    setLoading(false);
+    if (error) { showToast('Error al eliminar', 'error'); return; }
+    allAdminProps = allAdminProps.filter(x => x.id !== id);
+    renderStats();
+    renderTable();
+    showToast('Propiedad eliminada');
+  }
+
+  // ─────────────────────────────────────────────
+  // MODAL FORM
+  // ─────────────────────────────────────────────
+  function openNewModal() {
+    document.getElementById('formModalTitle').textContent = 'Nueva propiedad';
+    document.getElementById('btnSaveForm').textContent = 'Crear propiedad';
+    clearForm();
+    document.getElementById('formModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openEditModal(id) {
+    const p = allAdminProps.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('formModalTitle').textContent = 'Editar propiedad';
+    document.getElementById('btnSaveForm').textContent = 'Guardar cambios';
+    fillForm(p);
+    document.getElementById('formModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFormModal() {
+    document.getElementById('formModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── IMAGEN ──
+  async function uploadImageToStorage(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const fileName = `prop_${Date.now()}.${ext}`;
+    const { error } = await sb.storage.from('propiedades-imgs').upload(fileName, file, { upsert: true, contentType: file.type });
+    if (error) throw error;
+    const { data: { publicUrl } } = sb.storage.from('propiedades-imgs').getPublicUrl(fileName);
+    return publicUrl;
+  }
+
+  async function handleImageFile(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('La imagen supera los 5 MB', 'error'); return; }
+    document.getElementById('imgUploadProgress').style.display = 'block';
+    document.getElementById('imgDropZone').style.display = 'none';
+    try {
+      const url = await uploadImageToStorage(file);
+      document.getElementById('fieldImagen').value = url;
+      document.getElementById('imgPreviewImg').src = url;
+      document.getElementById('imgPreview').style.display = 'block';
+      document.getElementById('imgDropText').textContent = file.name;
+      showToast('Imagen subida correctamente');
+    } catch(e) {
+      showToast('Error al subir imagen: ' + e.message, 'error');
+      document.getElementById('imgDropZone').style.display = 'block';
+    }
+    document.getElementById('imgUploadProgress').style.display = 'none';
+  }
+
+  function handleImageDrop(e) {
+    e.preventDefault();
+    document.getElementById('imgDropZone').style.borderColor = '#ddd';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) handleImageFile(file);
+  }
+
+  function clearImage() {
+    document.getElementById('fieldImagen').value = '';
+    document.getElementById('fieldImagenFile').value = '';
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('imgDropZone').style.display = 'block';
+    document.getElementById('imgDropText').textContent = 'Haz clic para subir una imagen o arrástrala aquí';
+  }
+
+  function setImgPreviewFromUrl(url) {
+    if (url) {
+      document.getElementById('fieldImagen').value = url;
+      document.getElementById('imgPreviewImg').src = url;
+      document.getElementById('imgPreview').style.display = 'block';
+      document.getElementById('imgDropZone').style.display = 'none';
+      document.getElementById('imgDropText').textContent = 'Imagen actual';
+    } else {
+      clearImage();
+    }
+  }
+
+  function clearForm() {
+    document.getElementById('fieldId').value = '';
+    document.getElementById('fieldTitulo').value = '';
+    document.getElementById('fieldTipo').value = '';
+    document.getElementById('fieldUbicacion').value = '';
+    document.getElementById('fieldPrecio').value = '';
+    document.getElementById('fieldMetros').value = '';
+    document.getElementById('fieldHabitaciones').value = '';
+    document.getElementById('fieldBanos').value = '';
+    document.getElementById('fieldDesc').value = '';
+    document.getElementById('fieldCaract').value = '';
+    document.getElementById('fieldActivo').checked = true;
+    document.getElementById('fieldDestacado').checked = false;
+    clearImage();
+  }
+
+  function fillForm(p) {
+    document.getElementById('fieldId').value = p.id || '';
+    document.getElementById('fieldTitulo').value = p.titulo || '';
+    document.getElementById('fieldTipo').value = p.tipo || '';
+    document.getElementById('fieldUbicacion').value = p.ubicacion || '';
+    document.getElementById('fieldPrecio').value = p.precio || '';
+    document.getElementById('fieldMetros').value = p.metros || '';
+    document.getElementById('fieldHabitaciones').value = p.habitaciones || '';
+    document.getElementById('fieldBanos').value = p.banos || '';
+    document.getElementById('fieldDesc').value = p.descripcion || '';
+    document.getElementById('fieldCaract').value = (p.caracteristicas || []).join('\n');
+    document.getElementById('fieldActivo').checked = p.activo !== false;
+    document.getElementById('fieldDestacado').checked = !!p.destacado;
+    setImgPreviewFromUrl(p.imagen_url || '');
+  }
+
+  function getFormData() {
+    const caracteristicasRaw = document.getElementById('fieldCaract').value;
+    const caracteristicas = caracteristicasRaw.split('\n').map(s => s.trim()).filter(Boolean);
+    return {
+      titulo: document.getElementById('fieldTitulo').value.trim(),
+      tipo: document.getElementById('fieldTipo').value,
+      ubicacion: document.getElementById('fieldUbicacion').value.trim(),
+      precio: Number(document.getElementById('fieldPrecio').value) || 0,
+      metros: Number(document.getElementById('fieldMetros').value) || null,
+      habitaciones: Number(document.getElementById('fieldHabitaciones').value) || null,
+      banos: Number(document.getElementById('fieldBanos').value) || null,
+      descripcion: document.getElementById('fieldDesc').value.trim() || null,
+      caracteristicas: caracteristicas.length ? caracteristicas : null,
+      imagen_url: document.getElementById('fieldImagen').value.trim() || null,
+      activo: document.getElementById('fieldActivo').checked,
+      destacado: document.getElementById('fieldDestacado').checked,
+    };
+  }
+
+  document.getElementById('btnNew').addEventListener('click', openNewModal);
+  document.getElementById('formModalClose').addEventListener('click', closeFormModal);
+  document.getElementById('btnCancelForm').addEventListener('click', closeFormModal);
+  document.getElementById('formModal').addEventListener('click', e => { if (e.target === document.getElementById('formModal')) closeFormModal(); });
+
+  document.getElementById('btnSaveForm').addEventListener('click', async () => {
+    const form = document.getElementById('propForm');
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const id = document.getElementById('fieldId').value;
+    const data = getFormData();
+    const btn = document.getElementById('btnSaveForm');
+    btn.disabled = true;
+    btn.textContent = 'Guardando…';
+    setLoading(true);
+    let error;
+    if (id) {
+      ({ error } = await sb.from('propiedades').update(data).eq('id', id));
+    } else {
+      ({ error } = await sb.from('propiedades').insert(data));
+    }
+    setLoading(false);
+    btn.disabled = false;
+    btn.textContent = id ? 'Guardar cambios' : 'Crear propiedad';
+    if (error) { showToast('Error al guardar: ' + error.message, 'error'); return; }
+    closeFormModal();
+    showToast(id ? 'Propiedad actualizada' : 'Propiedad creada');
+    loadProps();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeFormModal();
+  });
+
+  // ─────────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────────
+  checkAuth();
+</script>
+</body>
+</html>
