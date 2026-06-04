@@ -1,0 +1,767 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DONPISO | Inmobiliaria en Garrucha, Almería - Compraventa y Financiación</title>
+  <meta name="description" content="Inmobiliaria especializada en compraventa de viviendas, comercios y terrenos en Garrucha. Asesoramiento en financiación hipotecaria.">
+  <meta name="theme-color" content="#2E8B57">
+  <link rel="canonical" href="https://donpisopropiedades.es/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://donpisopropiedades.es/">
+  <meta property="og:title" content="DONPISO | Inmobiliaria en Garrucha, Almería">
+  <meta property="og:description" content="Compraventa de viviendas, comercios y terrenos en Garrucha. Financiación especializada.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"RealEstateAgent","name":"DONPISO","description":"Inmobiliaria en Garrucha, Almería. Compraventa y financiación.","address":{"@type":"PostalAddress","addressLocality":"Garrucha","addressRegion":"Almería","addressCountry":"ES"},"telephone":"+34687322541","openingHours":"Mo-Su 00:00-23:59","sameAs":["https://instagram.com/agustin.inmobiliariadp"]}
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:  #2E8B57;
+      --green2: #4CAF50;
+      --white:  #FFFFFF;
+      --off:    #F5F5F5;
+      --dark:   #333333;
+      --mid:    #666666;
+      --black:  #1B5E20;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; font-family: 'Inter', sans-serif; border: none; }
+
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity .75s ease-out, transform .75s ease-out; }
+    .fade-in.visible { opacity: 1; transform: none; }
+    .scale-in { opacity: 0; transform: scale(.92); transition: opacity .8s ease-out, transform .8s ease-out; }
+    .scale-in.visible { opacity: 1; transform: scale(1); }
+    .d1 { transition-delay: .15s; } .d2 { transition-delay: .3s; } .d3 { transition-delay: .45s; } .d4 { transition-delay: .6s; }
+
+    .divider { width: 100px; height: 3px; background: var(--green); margin: 40px auto 0; border: none; }
+    .divider-white { background: var(--white); }
+
+    /* ── NAVBAR ── */
+    .navbar { position: sticky; top: 0; z-index: 200; height: 70px; background: var(--white); border-bottom: 2px solid var(--green); display: flex; align-items: center; }
+    .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav-logo { display:flex; align-items:center; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--dark); transition: color .3s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--green); }
+    .btn-contact { background: var(--green); color: var(--white); border-radius: 5px; padding: 10px 22px; font-size: 13px; font-weight: 600; transition: background .3s; white-space: nowrap; display: inline-block; }
+    .btn-contact:hover { background: var(--green2); }
+    .nav-ham { display: none; flex-direction: column; gap: 5px; background: none; padding: 4px; }
+    .nav-ham span { display: block; width: 22px; height: 2px; background: var(--green); border-radius: 2px; transition: .3s; }
+    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: var(--white); border-bottom: 2px solid var(--green); z-index: 199; padding: 12px 0; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a { display: block; padding: 13px 28px; font-size: 14px; font-weight: 500; color: var(--dark); transition: color .3s; }
+    .mobile-menu a:hover { color: var(--green); }
+    .mobile-menu .btn-contact { margin: 12px 24px; display: block; text-align: center; }
+
+    /* ── HERO ── */
+    #inicio { min-height: 65vh; background: var(--green); display: flex; align-items: center; justify-content: center; text-align: center; padding: 80px 24px; position: relative; overflow: hidden; }
+    .hero-bg-shape { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(46,139,87,.05) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+    .hero-content { max-width: 780px; position: relative; z-index: 2; }
+    .hero-h1 { font-family: 'Poppins', sans-serif; font-size: clamp(40px, 7vw, 68px); font-weight: 800; color: var(--white); line-height: 1; margin-bottom: 14px; letter-spacing: -1px; }
+    .hero-sub { font-size: clamp(17px, 2.5vw, 24px); font-weight: 400; color: rgba(255,255,255,.9); margin-bottom: 12px; }
+    .hero-tag { font-size: 15px; color: rgba(255,255,255,.8); margin-bottom: 44px; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-green { background: var(--white); color: var(--green); border: 2px solid var(--white); border-radius: 5px; padding: 14px 38px; font-size: 14px; font-weight: 600; transition: all .3s; cursor: pointer; display: inline-block; }
+    .btn-green:hover { background: var(--green2); color: var(--white); border-color: var(--green2); }
+    .btn-outline { background: transparent; color: var(--white); border: 2px solid var(--white); border-radius: 5px; padding: 14px 38px; font-size: 14px; font-weight: 600; transition: all .3s; cursor: pointer; display: inline-block; }
+    .btn-outline:hover { background: var(--white); color: var(--green); }
+
+    /* ── SERVICIOS ── */
+    #servicios { padding: 100px 40px; background: var(--white); }
+    .section-wrap { max-width: 1280px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-h2 { font-family: 'Poppins', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--green); margin-bottom: 12px; }
+    .section-sub { font-size: 15px; color: var(--mid); }
+    .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .service-card { background: var(--off); border-left: 4px solid var(--green); border-radius: 5px; padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,.04); transition: box-shadow .3s, transform .3s; }
+    .service-card:hover { box-shadow: 0 12px 36px rgba(46,139,87,.15); transform: translateY(-5px); }
+    .service-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .service-icon svg { width: 24px; height: 24px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .service-h3 { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700; color: var(--green); margin-bottom: 14px; }
+    .service-p { font-size: 13.5px; color: var(--dark); line-height: 1.7; margin-bottom: 16px; }
+    .service-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .service-list li { font-size: 13px; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .service-list li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+    /* ── PROPIEDADES ── */
+    #propiedades { padding: 100px 40px; background: var(--off); }
+    .props-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .prop-card { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,.06); transition: box-shadow .3s, transform .3s; }
+    .prop-card:hover { box-shadow: 0 12px 40px rgba(46,139,87,.15); transform: translateY(-4px); }
+    .prop-img { height: 240px; background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .prop-img svg { width: 48px; height: 48px; stroke: rgba(46,139,87,.4); fill: none; stroke-width: 1.5; }
+    .prop-badge { position: absolute; top: 14px; right: 14px; background: rgba(46,139,87,.92); color: var(--white); font-size: 10px; font-weight: 700; padding: 5px 10px; border-radius: 3px; letter-spacing: 1px; }
+    .prop-body { padding: 20px; }
+    .prop-name { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+    .prop-loc { font-size: 12px; color: var(--mid); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+    .prop-loc svg { width: 13px; height: 13px; stroke: var(--mid); fill: none; stroke-width: 2; }
+    .prop-desc { font-size: 12.5px; color: var(--dark); line-height: 1.5; margin-bottom: 12px; }
+    .prop-features { font-size: 11.5px; color: var(--mid); margin-bottom: 14px; padding: 8px 12px; background: var(--off); border-radius: 4px; }
+    .prop-price { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: var(--green); margin-bottom: 14px; }
+    .btn-prop { display: block; width: 100%; padding: 10px; background: var(--green); color: var(--white); border-radius: 5px; font-size: 12px; font-weight: 600; text-align: center; letter-spacing: .5px; transition: background .3s; cursor: pointer; border: none; }
+    .btn-prop:hover { background: var(--green2); }
+
+    /* ── BLOG ── */
+    #blog { padding: 100px 40px; background: var(--white); }
+    .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .blog-card { background: var(--off); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.04); transition: box-shadow .3s, transform .3s; }
+    .blog-card:hover { box-shadow: 0 12px 36px rgba(46,139,87,.12); transform: translateY(-4px); }
+    .blog-img { height: 190px; background: linear-gradient(135deg, #dcedc8 0%, #c5e1a5 100%); display: flex; align-items: center; justify-content: center; }
+    .blog-img svg { width: 40px; height: 40px; stroke: rgba(46,139,87,.4); fill: none; stroke-width: 1.5; }
+    .blog-body { padding: 22px; }
+    .blog-h3 { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: var(--green); margin-bottom: 8px; line-height: 1.4; }
+    .blog-date { font-size: 11px; color: var(--mid); margin-bottom: 12px; font-weight: 500; letter-spacing: .3px; }
+    .blog-excerpt { font-size: 12.5px; color: var(--dark); line-height: 1.6; margin-bottom: 16px; }
+    .blog-link { font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: .5px; transition: color .3s; cursor: pointer; }
+    .blog-link:hover { color: var(--green2); }
+
+    /* ── CONTACTO ── */
+    #contacto { padding: 100px 40px; background: var(--green); color: var(--white); }
+    .contact-map { width: 100%; height: 380px; border-radius: 8px; border: none; margin-bottom: 60px; display: block; box-shadow: 0 4px 24px rgba(0,0,0,.2); }
+    .contact-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+    .contact-h2 { font-family: 'Poppins', sans-serif; font-size: clamp(26px, 4vw, 42px); font-weight: 700; color: var(--white); text-align: center; margin-bottom: 12px; }
+    .contact-sub { font-size: 15px; color: rgba(255,255,255,.85); text-align: center; margin-bottom: 50px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 22px; }
+    .contact-item-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-item-icon svg { width: 18px; height: 18px; stroke: var(--white); fill: none; stroke-width: 2; }
+    .contact-item-body { display: flex; flex-direction: column; gap: 2px; }
+    .contact-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.6); }
+    .contact-item-val { font-size: 15px; color: var(--white); font-weight: 500; }
+    .contact-item-val a { color: var(--white); transition: opacity .3s; }
+    .contact-item-val a:hover { opacity: .8; }
+    .contact-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-input { width: 100%; padding: 13px 16px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3); border-radius: 5px; color: var(--white); font-size: 14px; font-family: 'Inter', sans-serif; transition: border-color .3s; outline: none; }
+    .form-input::placeholder { color: rgba(255,255,255,.6); }
+    .form-input:focus { border-color: rgba(255,255,255,.8); background: rgba(255,255,255,.18); }
+    textarea.form-input { height: 120px; resize: vertical; }
+    .btn-send { width: 100%; padding: 13px; background: var(--white); color: var(--green); border-radius: 5px; font-size: 14px; font-weight: 700; letter-spacing: .5px; transition: opacity .3s; cursor: pointer; border: none; font-family: 'Poppins', sans-serif; }
+    .btn-send:hover { opacity: .88; }
+    .form-success { display: none; text-align: center; padding: 20px; background: rgba(255,255,255,.15); border-radius: 8px; font-size: 15px; color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--black); border-top: 3px solid var(--green); padding: 50px 40px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .footer-logo { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 800; color: var(--green); margin-bottom: 8px; }
+    .footer-desc { font-size: 13px; color: var(--mid); }
+    .footer-h4 { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 14px; letter-spacing: .5px; text-transform: uppercase; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { font-size: 13px; color: var(--mid); transition: color .3s; line-height: 1.8; }
+    .footer-links a:hover { color: var(--green2); }
+    .footer-copy { max-width: 1280px; margin: 28px auto 0; text-align: center; font-size: 12px; color: var(--mid); border-top: 1px solid #2a2a2a; padding-top: 22px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); } .props-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .btn-contact { display: none; }
+      .nav-ham { display: flex; }
+      #servicios, #propiedades, #blog, #contacto { padding: 60px 20px; }
+      .services-grid, .props-grid, .blog-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+      footer { padding: 40px 20px; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .btn-green, .btn-outline { width: 100%; max-width: 320px; text-align: center; }
+      .contact-map { height: 260px; }
+    }
+    @media (max-width: 768px) { #valoracion { padding: 52px 20px !important; } }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in, .scale-in { transition: none; opacity: 1; transform: none; }
+    }
+
+    /* ── FILTROS PROPIEDADES ── */
+    .props-filters { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:32px; align-items:center; }
+    .filter-btn { padding:9px 20px; border-radius:20px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#666; cursor:pointer; transition:all .2s; }
+    .filter-btn:hover, .filter-btn.active { border-color:#2E8B57; color:#2E8B57; background:#f0fff4; }
+    .filter-select { padding:9px 16px; border-radius:20px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#666; cursor:pointer; transition:all .2s; outline:none; font-family:'Inter',sans-serif; }
+    .filter-select:focus { border-color:#2E8B57; }
+    .props-count { font-size:13px; color:#888; margin-left:auto; }
+
+    /* ── LOADING STATE ── */
+    .props-loading { text-align:center; padding:60px 20px; color:#888; font-size:15px; }
+    .props-loading::after { content:''; display:block; width:40px; height:40px; border:3px solid #e0e0e0; border-top-color:#2E8B57; border-radius:50%; margin:16px auto 0; animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .props-empty { text-align:center; padding:60px 20px; color:#888; }
+    .props-empty svg { width:48px; height:48px; stroke:#ccc; fill:none; stroke-width:1.5; margin:0 auto 16px; display:block; }
+
+    /* ── PROP CARD UPDATES ── */
+    .prop-img { background-size:cover; background-position:center; background-color:#e8f5e9; }
+    .prop-img-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,.18) 100%); }
+    .prop-badge-dest { position:absolute; top:14px; left:14px; background:#FF6B35; color:#fff; font-size:10px; font-weight:800; padding:5px 10px; border-radius:3px; letter-spacing:1px; text-transform:uppercase; }
+    .prop-tipo { position:absolute; top:14px; right:14px; background:rgba(46,139,87,.9); color:#fff; font-size:10px; font-weight:700; padding:5px 10px; border-radius:3px; letter-spacing:.5px; text-transform:uppercase; }
+    .prop-stats { display:flex; gap:16px; font-size:12px; color:#666; margin-bottom:14px; }
+    .prop-stats span { display:flex; align-items:center; gap:4px; }
+    .prop-stats svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; flex-shrink:0; }
+    .prop-actions { display:flex; gap:8px; }
+    .btn-prop-sec { flex:1; display:block; padding:9px; background:transparent; color:#2E8B57; border-radius:5px; font-size:11.5px; font-weight:700; text-align:center; letter-spacing:.5px; transition:all .3s; cursor:pointer; border:2px solid #2E8B57; text-decoration:none; }
+    .btn-prop-sec:hover { background:#2E8B57; color:#fff; }
+    .btn-prop { flex:2; }
+
+    /* ── MODAL PROPIEDAD ── */
+    .prop-modal-overlay { display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.6); overflow-y:auto; padding:24px 16px; align-items:flex-start; justify-content:center; }
+    .prop-modal-overlay.open { display:flex; }
+    .prop-modal { background:#fff; border-radius:12px; max-width:860px; width:100%; margin:auto; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,.25); }
+    .prop-modal-img { height:340px; background-size:cover; background-position:center; background-color:#e8f5e9; position:relative; }
+    .prop-modal-img-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+    .prop-modal-img-fallback svg { width:64px; height:64px; stroke:#aaa; fill:none; stroke-width:1.2; }
+    .prop-modal-body { padding:32px; }
+    .prop-modal-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+    .prop-modal-title { font-family:'Poppins',sans-serif; font-size:clamp(18px,3vw,24px); font-weight:700; color:#2E8B57; line-height:1.3; }
+    .prop-modal-price { font-family:'Poppins',sans-serif; font-size:clamp(22px,3vw,30px); font-weight:800; color:#1B5E20; white-space:nowrap; }
+    .prop-modal-loc { font-size:13px; color:#888; margin-bottom:16px; display:flex; align-items:center; gap:6px; }
+    .prop-modal-loc svg { width:14px; height:14px; stroke:#2E8B57; fill:none; stroke-width:2; flex-shrink:0; }
+    .prop-modal-stats { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; padding:16px; background:#f8f8f8; border-radius:8px; }
+    .prop-modal-stat { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:#333; }
+    .prop-modal-stat svg { width:18px; height:18px; stroke:#2E8B57; fill:none; stroke-width:2; flex-shrink:0; }
+    .prop-modal-desc { font-size:14px; color:#555; line-height:1.75; margin-bottom:20px; }
+    .prop-modal-caract { margin-bottom:24px; }
+    .prop-modal-caract h4 { font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; color:#2E8B57; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+    .prop-modal-caract ul { display:flex; flex-wrap:wrap; gap:8px; list-style:none; }
+    .prop-modal-caract li { background:#f0fff4; color:#2E8B57; border:1px solid #c8e6c9; font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:20px; }
+    .prop-modal-btns { display:flex; gap:12px; flex-wrap:wrap; }
+    .prop-modal-btns a { flex:1; min-width:140px; display:block; padding:14px 20px; border-radius:6px; font-size:14px; font-weight:700; text-align:center; text-decoration:none; transition:all .2s; }
+    .btn-modal-wa { background:#25D366; color:#fff; }
+    .btn-modal-wa:hover { background:#1ebe5d; }
+    .btn-modal-call { background:#2E8B57; color:#fff; }
+    .btn-modal-call:hover { background:#4CAF50; }
+    .btn-modal-ideal { background:#fff; color:#2E8B57; border:2px solid #2E8B57; }
+    .btn-modal-ideal:hover { background:#2E8B57; color:#fff; }
+    .prop-modal-close { position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.9); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.15); transition:background .2s; z-index:2; }
+    .prop-modal-close:hover { background:#fff; }
+    .prop-modal-close svg { width:18px; height:18px; stroke:#333; fill:none; stroke-width:2.5; stroke-linecap:round; }
+
+    @media (max-width:768px) {
+      .props-filters { gap:8px; }
+      .filter-btn { padding:7px 14px; font-size:12px; }
+      .prop-modal-img { height:220px; }
+      .prop-modal-body { padding:20px; }
+      .prop-modal-btns a { min-width:100%; }
+      .props-count { margin-left:0; width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar" role="banner">
+  <div class="nav-inner">
+    <a href="#inicio" class="nav-logo" aria-label="DONPISO — Inicio"><img src="logo.png" alt="DONPISO" style="height:50px;width:auto;display:block;"></a>
+    <ul class="nav-links" role="list">
+      <li><a href="#inicio">INICIO</a></li>
+      <li><a href="#propiedades">PROPIEDADES</a></li>
+      <li><a href="#servicios">SERVICIOS</a></li>
+      <li><a href="#blog">BLOG</a></li>
+      <li><a href="#contacto">CONTACTO</a></li>
+    </ul>
+    <a href="https://wa.me/34687322541" target="_blank" rel="noopener" class="btn-contact">CONTACTAR</a>
+    <button class="nav-ham" id="hamBtn" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#inicio" class="mobile-link">INICIO</a>
+  <a href="#propiedades" class="mobile-link">PROPIEDADES</a>
+  <a href="#servicios" class="mobile-link">SERVICIOS</a>
+  <a href="#blog" class="mobile-link">BLOG</a>
+  <a href="#contacto" class="mobile-link">CONTACTO</a>
+  <a href="https://wa.me/34687322541" target="_blank" rel="noopener" class="btn-contact">CONTACTAR</a>
+</div>
+
+<!-- HERO -->
+<section id="inicio" aria-labelledby="hero-h1">
+  <div class="hero-bg-shape" aria-hidden="true"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow scale-in" style="font-size:clamp(13px,2vw,16px);font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:12px;">Inmobiliaria en Garrucha · Almería</p><h1 class="hero-h1 scale-in" id="hero-h1">¿VENDES TU PISO?</h1>
+    <p class="hero-sub fade-in d1" style="font-size:clamp(22px,4vw,40px);font-weight:700;letter-spacing:-0.5px;">CONSULTA A DONPISO</p>
+    <p class="hero-tag fade-in d2">Compraventa de viviendas, comercios y terrenos · <strong style="color:#fff;">Valoración gratuita sin compromiso</strong></p>
+    <div class="hero-btns fade-in d3">
+      <a href="tel:+34687322541" class="btn-green">LLAMAR AHORA</a>
+      <a href="https://wa.me/34687322541" target="_blank" rel="noopener" class="btn-outline">WHATSAPP</a>
+    </div>
+    <hr class="divider" aria-hidden="true">
+  </div>
+</section>
+
+
+<!-- VALORACIÓN GRATUITA -->
+<section id="valoracion" style="background:#FFFFFF;padding:72px 24px;text-align:center;border-top:4px solid #2E8B57;border-bottom:4px solid #2E8B57;">
+  <div style="max-width:800px;margin:0 auto;">
+    <p style="font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#4CAF50;margin-bottom:16px;">SIN COMPROMISO · SIN COSTE</p>
+    <h2 style="font-family:'Poppins',sans-serif;font-size:clamp(26px,4vw,44px);font-weight:800;color:#2E8B57;line-height:1.15;margin-bottom:18px;">VALORACIÓN PROFESIONAL<br>GRATUITA DE TU INMUEBLE</h2>
+    <p style="font-size:17px;color:#555555;margin-bottom:40px;line-height:1.6;">Nuestros expertos valoran tu propiedad sin compromiso ni coste alguno.<br>Descubre el precio real de tu vivienda, local o terreno hoy mismo.</p>
+    <a href="https://wa.me/34687322541?text=Hola,%20quiero%20solicitar%20una%20valoraci%C3%B3n%20gratuita%20de%20mi%20inmueble"
+       target="_blank" rel="noopener"
+       style="display:inline-block;background:#2E8B57;color:#fff;font-family:'Poppins',sans-serif;font-size:16px;font-weight:800;padding:18px 48px;border-radius:6px;letter-spacing:.5px;transition:opacity .3s;box-shadow:0 8px 30px rgba(46,139,87,.25);">
+      SOLICITAR VALORACIÓN GRATUITA
+    </a>
+    <p style="margin-top:20px;font-size:13px;color:#888888;">Respuesta en menos de 24h · Sin necesidad de visita previa</p>
+  </div>
+</section>
+<!-- SERVICIOS -->
+<section id="servicios" aria-labelledby="servicios-h2">
+  <div class="section-wrap">
+    <div class="section-header fade-in">
+      <span style="display:inline-block;background:#2E8B57;color:#fff;font-size:11px;font-weight:800;letter-spacing:2px;padding:6px 16px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;">✓ Valoración gratuita incluida</span>
+      <h2 class="section-h2" id="servicios-h2">NUESTROS SERVICIOS</h2>
+      <p class="section-sub">Soluciones inmobiliarias completas para tu confianza</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-in" style="border-left-color:#4CAF50;position:relative;">
+        <span style="position:absolute;top:16px;right:16px;background:#4CAF50;color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:1px;">GRATIS</span>
+        <div class="service-icon" aria-hidden="true" style="background:#4CAF50;">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 class="service-h3">VALORACIÓN GRATUITA</h3>
+        <p class="service-p" style="font-weight:600;color:#2E8B57;">¿Cuánto vale tu propiedad? Te lo decimos gratis.</p>
+        <ul class="service-list">
+          <li>Valoración profesional sin coste</li>
+          <li>Resultado en 24 horas</li>
+          <li>Sin compromiso de venta</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 class="service-h3">COMPRAVENTA DE VIVIENDAS</h3>
+        <p class="service-p">Asesoramiento completo en la compraventa de viviendas. Desde búsqueda hasta cierre de la operación, nos encargamos de todo.</p>
+        <ul class="service-list">
+          <li>Búsqueda personalizada</li>
+          <li>Gestión de documentos</li>
+          <li>Asesoría legal y fiscal</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in d1">
+        <div class="service-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <h3 class="service-h3">COMERCIOS Y TERRENOS</h3>
+        <p class="service-p">Especialistas en transacciones de locales comerciales y terrenos edificables. Inversiones seguras con análisis de rentabilidad.</p>
+        <ul class="service-list">
+          <li>Análisis de viabilidad</li>
+          <li>Oportunidades de inversión</li>
+          <li>Negociación experta</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in d2">
+        <div class="service-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3 class="service-h3">FINANCIACIÓN Y TRÁMITES</h3>
+        <p class="service-p">Asesoramiento en financiación hipotecaria y gestión de trámites notariales. Procesos ágiles y transparentes.</p>
+        <ul class="service-list">
+          <li>Hipotecas competitivas</li>
+          <li>Asesoría financiera</li>
+          <li>Trámites rápidos</li>
+        </ul>
+      </div>
+    </div>
+    <hr class="divider" aria-hidden="true">
+  </div>
+</section>
+
+<!-- PROPIEDADES -->
+<section id="propiedades" aria-labelledby="props-h2">
+  <div class="section-wrap">
+    <div class="section-header fade-in">
+      <h2 class="section-h2" id="props-h2">NUESTRAS PROPIEDADES</h2>
+      <p class="section-sub">Encuentra tu hogar ideal en Almería</p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="props-filters fade-in">
+      <button class="filter-btn active" data-tipo="">TODAS</button>
+      <button class="filter-btn" data-tipo="Piso">PISOS</button>
+      <button class="filter-btn" data-tipo="Dúplex">DÚPLEX</button>
+      <button class="filter-btn" data-tipo="Chalet adosado">CHALETS</button>
+      <select class="filter-select" id="filterPrecio">
+        <option value="">Precio: todos</option>
+        <option value="150000">Hasta 150.000 €</option>
+        <option value="250000">Hasta 250.000 €</option>
+        <option value="400000">Hasta 400.000 €</option>
+        <option value="700000">Hasta 700.000 €</option>
+      </select>
+      <span class="props-count" id="propsCount"></span>
+    </div>
+
+    <!-- Grid dinámico -->
+    <div id="propsGrid" class="props-grid">
+      <div class="props-loading" style="grid-column:1/-1">Cargando propiedades…</div>
+    </div>
+
+    <hr class="divider" aria-hidden="true">
+  </div>
+</section>
+
+<!-- MODAL PROPIEDAD -->
+<div class="prop-modal-overlay" id="propModal" role="dialog" aria-modal="true" aria-label="Detalle de propiedad">
+  <div class="prop-modal">
+    <div class="prop-modal-img" id="modalImg">
+      <div class="prop-modal-img-fallback">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <button class="prop-modal-close" id="modalClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="prop-modal-body">
+      <div class="prop-modal-header">
+        <h2 class="prop-modal-title" id="modalTitle"></h2>
+        <p class="prop-modal-price" id="modalPrice"></p>
+      </div>
+      <p class="prop-modal-loc" id="modalLoc">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span></span>
+      </p>
+      <div class="prop-modal-stats" id="modalStats"></div>
+      <p class="prop-modal-desc" id="modalDesc"></p>
+      <div class="prop-modal-caract" id="modalCaract">
+        <h4>Características</h4>
+        <ul id="modalCaractList"></ul>
+      </div>
+      <div class="prop-modal-btns">
+        <a href="https://wa.me/34687322541" target="_blank" rel="noopener" class="btn-modal-wa" id="modalWa">💬 WhatsApp</a>
+        <a href="tel:+34687322541" class="btn-modal-call">📞 Llamar</a>
+        <a href="#" target="_blank" rel="noopener" class="btn-modal-ideal" id="modalIdealista">Ver en Idealista →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG -->
+<section id="blog" aria-labelledby="blog-h2">
+  <div class="section-wrap">
+    <div class="section-header fade-in">
+      <h2 class="section-h2" id="blog-h2">BLOG INMOBILIARIO</h2>
+      <p class="section-sub">Consejos, noticias y guías sobre el mercado inmobiliario</p>
+    </div>
+    <div class="blog-grid">
+
+      <article class="blog-card fade-in">
+        <div class="blog-img" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="blog-body">
+          <h3 class="blog-h3">Guía completa para comprar tu primera vivienda</h3>
+          <p class="blog-date">15 de Mayo, 2025</p>
+          <p class="blog-excerpt">Descubre los pasos esenciales, documentos necesarios y consejos clave para invertir en tu hogar sin errores ni sorpresas.</p>
+          <a class="blog-link" href="blog-comprar-primera-vivienda.html" target="_blank">LEER MÁS →</a>
+        </div>
+      </article>
+
+      <article class="blog-card fade-in d1">
+        <div class="blog-img" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="blog-body">
+          <h3 class="blog-h3">Tendencias del mercado inmobiliario 2025</h3>
+          <p class="blog-date">10 de Mayo, 2025</p>
+          <p class="blog-excerpt">Análisis de precios, demanda y oportunidades de inversión en la zona costera de Almería para este año.</p>
+          <a class="blog-link" href="blog-tendencias-mercado-2025.html" target="_blank">LEER MÁS →</a>
+        </div>
+      </article>
+
+      <article class="blog-card fade-in d2">
+        <div class="blog-img" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="blog-body">
+          <h3 class="blog-h3">Financiación hipotecaria: ¿Cuál es la mejor opción?</h3>
+          <p class="blog-date">5 de Mayo, 2025</p>
+          <p class="blog-excerpt">Comparativa de tipos de hipotecas, tasas de interés y cómo elegir la financiación más adecuada para ti.</p>
+          <a class="blog-link" href="blog-financiacion-hipotecaria.html" target="_blank">LEER MÁS →</a>
+        </div>
+      </article>
+
+    </div>
+    <hr class="divider" aria-hidden="true">
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" aria-labelledby="contacto-h2">
+  <div style="max-width:1280px;margin:0 auto;">
+    <h2 class="contact-h2 fade-in" id="contacto-h2">¿NECESITAS ASESORAMIENTO?</h2>
+    <p class="contact-sub fade-in d1">Contacta con nosotros, estaremos disponibles 24 horas</p>
+    <div style="display:inline-block;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:14px;font-weight:700;padding:10px 28px;border-radius:6px;margin-bottom:16px;letter-spacing:.5px;">🏡 Valoración de tu inmueble 100% GRATUITA</div>
+
+    <iframe
+      class="contact-map"
+      src="https://maps.google.com/maps?q=Garrucha,+Almeria,+Spain&output=embed&z=14"
+      loading="lazy" allowfullscreen
+      title="Mapa Garrucha Almería"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+
+    <div class="contact-grid fade-in d2">
+      <!-- INFO -->
+      <div>
+        <div class="contact-item">
+          <div class="contact-item-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.63 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div class="contact-item-body">
+            <span class="contact-item-label">Teléfono</span>
+            <span class="contact-item-val"><a href="tel:+34687322541">+34 687 322 541</a></span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="contact-item-body">
+            <span class="contact-item-label">WhatsApp</span>
+            <span class="contact-item-val"><a href="https://wa.me/34687322541" target="_blank" rel="noopener">Envía un mensaje por WhatsApp</a></span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="contact-item-body">
+            <span class="contact-item-label">Ubicación</span>
+            <span class="contact-item-val">Garrucha, Almería, España</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="contact-item-body">
+            <span class="contact-item-label">Horario</span>
+            <span class="contact-item-val" style="font-weight:700;">24 horas, abierto siempre</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div class="contact-item-body">
+            <span class="contact-item-label">Instagram</span>
+            <span class="contact-item-val"><a href="https://instagram.com/agustin.inmobiliariadp" target="_blank" rel="noopener">@agustin.inmobiliariadp</a></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA CONTACTO -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:28px;">
+          <p style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px;">SIN COSTE · SIN COMPROMISO</p>
+          <h3 style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">Tu inmueble tiene un precio real. Descúbrelo gratis.</h3>
+          <p style="font-size:14px;color:rgba(255,255,255,.85);line-height:1.7;margin-bottom:22px;">Solicita tu valoración profesional gratuita y recibe el informe en menos de 24 horas.</p>
+          <a href="https://wa.me/34687322541?text=Hola,%20quiero%20solicitar%20una%20valoraci%C3%B3n%20gratuita%20de%20mi%20inmueble" target="_blank" rel="noopener"
+             style="display:block;background:#fff;color:#2E8B57;font-family:'Poppins',sans-serif;font-size:15px;font-weight:800;padding:16px;border-radius:5px;text-align:center;margin-bottom:12px;">
+            VALORACIÓN GRATUITA →
+          </a>
+          <a href="https://wa.me/34687322541" target="_blank" rel="noopener"
+             style="display:block;background:rgba(255,255,255,.12);color:#fff;font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;padding:14px;border-radius:5px;text-align:center;border:1px solid rgba(255,255,255,.3);">
+            ENVIAR WHATSAPP
+          </a>
+          <a href="tel:+34687322541"
+             style="display:block;margin-top:10px;color:rgba(255,255,255,.7);font-size:13px;text-align:center;">
+            📞 +34 687 322 541
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <img src="logo.png" alt="DONPISO" style="height:40px;width:auto;margin-bottom:10px;">
+      <p class="footer-desc">Inmobiliaria Garrucha</p>
+    </div>
+    <div>
+      <h4 class="footer-h4">NAVEGACIÓN</h4>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#inicio">Inicio</a>
+        <a href="#propiedades">Propiedades</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#blog">Blog</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+    <div>
+      <h4 class="footer-h4">CONTACTO</h4>
+      <nav class="footer-links" aria-label="Contacto footer">
+        <a href="tel:+34687322541">687 322 541</a>
+        <a href="https://instagram.com/agustin.inmobiliariadp" target="_blank" rel="noopener">Instagram: @agustin.inmobiliariadp</a>
+        <a href="https://wa.me/34687322541" target="_blank" rel="noopener">WhatsApp directo</a>
+      </nav>
+    </div>
+  </div>
+  <p class="footer-copy">© 2025 DONPISO | Inmobiliaria Garrucha</p>
+</footer>
+
+<script>
+  /* ── HAMBURGER ── */
+  const ham = document.getElementById('hamBtn');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => { const o = menu.classList.toggle('open'); ham.setAttribute('aria-expanded', o); });
+  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => { menu.classList.remove('open'); ham.setAttribute('aria-expanded','false'); }));
+
+  /* ── FORMULARIO ── */
+  
+
+  /* ── INTERSECTION OBSERVER ── */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: .1 });
+  document.querySelectorAll('.fade-in, .scale-in').forEach(el => obs.observe(el));
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.classList.remove('open'); ham.setAttribute('aria-expanded','false'); } });
+
+  /* ── SUPABASE PROPIEDADES ── */
+  const SUPABASE_URL = 'https://srbmwxrptetpizcrmmel.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyYm13eHJwdGV0cGl6Y3JtbWVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDEyMzEsImV4cCI6MjA5MjAxNzIzMX0.yUx8Ljt4orIqEKoXGIdi0mcKTJ6rKrXvRg7TJrKHvpQ';
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  let allProps = [];
+  let activeFilters = { tipo: '', precio: '' };
+
+  async function loadProperties() {
+    const grid = document.getElementById('propsGrid');
+    grid.innerHTML = '<div class="props-loading" style="grid-column:1/-1">Cargando propiedades…</div>';
+    try {
+      const { data, error } = await sb.from('propiedades').select('*')
+        .eq('activo', true)
+        .order('destacado', { ascending: false })
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      allProps = data || [];
+      applyFilters();
+    } catch(e) {
+      grid.innerHTML = '<div class="props-empty" style="grid-column:1/-1"><p>No se pudieron cargar las propiedades.<br><small style="color:#aaa">' + e.message + '</small></p></div>';
+    }
+  }
+
+  function applyFilters() {
+    let filtered = [...allProps];
+    if (activeFilters.tipo) filtered = filtered.filter(p => p.tipo === activeFilters.tipo);
+    if (activeFilters.precio) filtered = filtered.filter(p => p.precio <= parseInt(activeFilters.precio));
+    renderProperties(filtered);
+    const count = document.getElementById('propsCount');
+    if (count) count.textContent = filtered.length + ' propiedad' + (filtered.length !== 1 ? 'es' : '');
+  }
+
+  function fmtPrice(n) { return Number(n).toLocaleString('es-ES') + ' €'; }
+
+  function renderProperties(props) {
+    const grid = document.getElementById('propsGrid');
+    if (!props.length) {
+      grid.innerHTML = '<div class="props-empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><p>No hay propiedades con estos filtros.</p></div>';
+      return;
+    }
+    grid.innerHTML = props.map(p => {
+      const imgStyle = p.imagen_url ? `background-image:url('${p.imagen_url}')` : '';
+      return `
+      <article class="prop-card fade-in" style="cursor:default;">
+        <div class="prop-img" style="${imgStyle}">
+          <div class="prop-img-inner">
+            ${!p.imagen_url ? '<svg viewBox="0 0 24 24" style="width:48px;height:48px;stroke:rgba(46,139,87,.4);fill:none;stroke-width:1.5;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' : ''}
+          </div>
+          ${p.destacado ? '<span class="prop-badge-dest">⭐ DESTACADO</span>' : ''}
+          <span class="prop-tipo">${p.tipo}</span>
+        </div>
+        <div class="prop-body">
+          <h3 class="prop-name">${p.titulo}</h3>
+          <p class="prop-loc">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${p.ubicacion}
+          </p>
+          <div class="prop-stats">
+            ${p.habitaciones ? `<span><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>${p.habitaciones} hab.</span>` : ''}
+            ${p.banos ? `<span><svg viewBox="0 0 24 24"><path d="M4 12h16v4a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6v-4z"/><path d="M4 12V6a2 2 0 0 1 2-2h1v2"/><line x1="2" y1="12" x2="22" y2="12"/></svg>${p.banos} baños</span>` : ''}
+            ${p.metros ? `<span><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>${p.metros} m²</span>` : ''}
+          </div>
+          <p class="prop-price">${fmtPrice(p.precio)}</p>
+          <div class="prop-actions">
+            <button class="btn-prop" onclick="openPropModal('${p.id}')">VER DETALLES</button>
+            ${p.enlace_idealista ? `<a class="btn-prop-sec" href="${p.enlace_idealista}" target="_blank" rel="noopener">IDEALISTA</a>` : ''}
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+    grid.querySelectorAll('.fade-in').forEach(el => { setTimeout(() => el.classList.add('visible'), 50); });
+  }
+
+  /* Filtro tipo */
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilters.tipo = btn.dataset.tipo || '';
+      applyFilters();
+    });
+  });
+
+  /* Filtro precio */
+  const filterPrecio = document.getElementById('filterPrecio');
+  if (filterPrecio) filterPrecio.addEventListener('change', e => { activeFilters.precio = e.target.value; applyFilters(); });
+
+  /* Modal */
+  function openPropModal(id) {
+    const p = allProps.find(x => x.id === id);
+    if (!p) return;
+    const modal = document.getElementById('propModal');
+    const imgEl = document.getElementById('modalImg');
+    if (p.imagen_url) {
+      imgEl.style.backgroundImage = `url('${p.imagen_url}')`;
+      imgEl.querySelector('.prop-modal-img-fallback').style.display = 'none';
+    } else {
+      imgEl.style.backgroundImage = '';
+      imgEl.querySelector('.prop-modal-img-fallback').style.display = 'flex';
+    }
+    document.getElementById('modalTitle').textContent = p.titulo;
+    document.getElementById('modalPrice').textContent = fmtPrice(p.precio);
+    document.getElementById('modalLoc').querySelector('span').textContent = p.ubicacion;
+    document.getElementById('modalStats').innerHTML = [
+      p.habitaciones ? `<div class="prop-modal-stat"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>${p.habitaciones} Habitaciones</div>` : '',
+      p.banos ? `<div class="prop-modal-stat"><svg viewBox="0 0 24 24"><path d="M4 12h16v4a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6v-4z"/><path d="M4 12V6a2 2 0 0 1 2-2h1v2"/><line x1="2" y1="12" x2="22" y2="12"/></svg>${p.banos} Baños</div>` : '',
+      p.metros ? `<div class="prop-modal-stat"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>${p.metros} m²</div>` : '',
+      `<div class="prop-modal-stat"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg>${p.tipo}</div>`
+    ].join('');
+    document.getElementById('modalDesc').textContent = p.descripcion || '';
+    const caractList = document.getElementById('modalCaractList');
+    if (p.caracteristicas && p.caracteristicas.length) {
+      document.getElementById('modalCaract').style.display = '';
+      caractList.innerHTML = p.caracteristicas.map(c => `<li>${c}</li>`).join('');
+    } else {
+      document.getElementById('modalCaract').style.display = 'none';
+    }
+    const waMsg = encodeURIComponent(`Hola, me interesa la propiedad: ${p.titulo} (${p.ubicacion}) - ${fmtPrice(p.precio)}`);
+    document.getElementById('modalWa').href = `https://wa.me/34687322541?text=${waMsg}`;
+    const idealBtn = document.getElementById('modalIdealista');
+    if (p.enlace_idealista) { idealBtn.href = p.enlace_idealista; idealBtn.style.display = ''; }
+    else { idealBtn.style.display = 'none'; }
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('modalClose').addEventListener('click', closePropModal);
+  document.getElementById('propModal').addEventListener('click', e => { if (e.target === document.getElementById('propModal')) closePropModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePropModal(); });
+
+  function closePropModal() {
+    document.getElementById('propModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  loadProperties();
+</script>
+</body>
+</html>
