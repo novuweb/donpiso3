@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apartamento Costa Garrucha | DONPISO</title>
+  <meta name="description" content="Apartamento con vistas al mar en Garrucha. 3 hab, 2 baños, 120m². 185.000€">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green:#2E8B57; --green2:#4CAF50; --white:#FFFFFF; --off:#F5F5F5; --dark:#333333; --mid:#666666; }
+    body { font-family:'Inter',sans-serif; background:var(--white); color:var(--dark); -webkit-font-smoothing:antialiased; }
+    a { text-decoration:none; color:inherit; }
+    .navbar { height:70px; background:var(--white); border-bottom:2px solid var(--green); display:flex; align-items:center; position:sticky; top:0; z-index:100; }
+    .nav-inner { max-width:1100px; margin:0 auto; padding:0 24px; width:100%; display:flex; align-items:center; justify-content:space-between; }
+    .nav-logo img { height:48px; width:auto; }
+    .nav-back { font-size:13px; font-weight:600; color:var(--green); display:flex; align-items:center; gap:6px; }
+    .nav-back svg { width:16px; height:16px; stroke:var(--green); fill:none; stroke-width:2.5; }
+    .nav-back:hover { opacity:.7; }
+
+    .prop-hero { background:linear-gradient(135deg,#c8e6c9,#a5d6a7); height:420px; display:flex; align-items:center; justify-content:center; position:relative; }
+    .prop-hero svg { width:80px; height:80px; stroke:rgba(46,139,87,.3); fill:none; stroke-width:1; }
+    .prop-badge-hero { position:absolute; top:24px; right:24px; background:rgba(46,139,87,.92); color:#fff; font-size:12px; font-weight:700; padding:8px 16px; border-radius:4px; letter-spacing:1px; }
+
+    .prop-body { max-width:1100px; margin:0 auto; padding:48px 24px; display:grid; grid-template-columns:1fr 360px; gap:48px; align-items:start; }
+    .prop-title { font-family:'Poppins',sans-serif; font-size:32px; font-weight:800; color:var(--green); margin-bottom:8px; }
+    .prop-loc { font-size:14px; color:var(--mid); margin-bottom:20px; display:flex; align-items:center; gap:6px; }
+    .prop-loc svg { width:16px; height:16px; stroke:var(--mid); fill:none; stroke-width:2; }
+    .prop-price-big { font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; color:var(--green); margin-bottom:28px; }
+    .prop-features-row { display:flex; gap:24px; flex-wrap:wrap; margin-bottom:32px; padding:20px; background:var(--off); border-radius:8px; }
+    .prop-feat { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .prop-feat-val { font-family:'Poppins',sans-serif; font-size:22px; font-weight:700; color:var(--green); }
+    .prop-feat-lbl { font-size:11px; color:var(--mid); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+    .prop-section-title { font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; color:var(--dark); margin-bottom:14px; margin-top:28px; }
+    .prop-p { font-size:15px; line-height:1.8; color:var(--dark); margin-bottom:12px; }
+    .prop-list { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
+    .prop-list li { font-size:13.5px; color:var(--dark); display:flex; align-items:center; gap:8px; }
+    .prop-list li::before { content:'✓'; color:var(--green); font-weight:700; }
+
+    .prop-sidebar { position:sticky; top:80px; }
+    .sidebar-card { background:var(--white); border:2px solid var(--green); border-radius:10px; padding:28px; }
+    .sidebar-price { font-family:'Poppins',sans-serif; font-size:28px; font-weight:800; color:var(--green); margin-bottom:6px; }
+    .sidebar-ref { font-size:12px; color:var(--mid); margin-bottom:24px; }
+    .btn-wa { display:block; background:var(--green); color:#fff; font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; padding:15px; border-radius:6px; text-align:center; margin-bottom:12px; transition:background .3s; }
+    .btn-wa:hover { background:var(--green2); }
+    .btn-call { display:block; background:var(--off); color:var(--dark); font-family:'Poppins',sans-serif; font-size:14px; font-weight:600; padding:13px; border-radius:6px; text-align:center; border:1px solid #ddd; }
+    .btn-val { display:block; margin-top:16px; background:var(--off); border:2px dashed var(--green); color:var(--green); font-size:13px; font-weight:700; padding:12px; border-radius:6px; text-align:center; }
+    .sidebar-info { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
+    .sidebar-info-row { display:flex; justify-content:space-between; font-size:13px; padding-bottom:8px; border-bottom:1px solid #eee; }
+    .sidebar-info-row span:first-child { color:var(--mid); }
+    .sidebar-info-row span:last-child { font-weight:600; color:var(--dark); }
+
+    .similares { max-width:1100px; margin:0 auto; padding:40px 24px 60px; }
+    .similares h2 { font-family:'Poppins',sans-serif; font-size:22px; font-weight:700; color:var(--dark); margin-bottom:28px; }
+    .sim-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+    .sim-card { background:var(--white); border-radius:8px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.06); transition:box-shadow .3s,transform .3s; }
+    .sim-card:hover { box-shadow:0 8px 32px rgba(46,139,87,.15); transform:translateY(-3px); }
+    .sim-img { height:180px; background:linear-gradient(135deg,#c8e6c9,#a5d6a7); display:flex; align-items:center; justify-content:center; }
+    .sim-img svg { width:40px; height:40px; stroke:rgba(46,139,87,.3); fill:none; stroke-width:1.5; }
+    .sim-body { padding:18px; }
+    .sim-name { font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; color:var(--green); margin-bottom:6px; }
+    .sim-feat { font-size:12px; color:var(--mid); margin-bottom:10px; }
+    .sim-price { font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; color:var(--green); margin-bottom:10px; }
+    .sim-btn { display:block; width:100%; padding:9px; background:var(--green); color:#fff; border-radius:5px; font-size:12px; font-weight:600; text-align:center; transition:background .3s; }
+    .sim-btn:hover { background:var(--green2); }
+
+    footer { background:#1B5E20; border-top:3px solid var(--green); padding:28px 24px; text-align:center; }
+    footer p { font-size:12px; color:rgba(255,255,255,.5); }
+    footer a { color:var(--green2); }
+
+    @media(max-width:768px) {
+      .prop-body { grid-template-columns:1fr; }
+      .prop-sidebar { position:static; }
+      .sim-grid { grid-template-columns:1fr; }
+      .prop-list { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="DONPISO"></a>
+  <a href="index.html#propiedades" class="nav-back">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver a propiedades
+  </a>
+</header>
+
+<div class="prop-hero">
+  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  <span class="prop-badge-hero">DESTACADO</span>
+</div>
+
+<div class="prop-body">
+  <div>
+    <h1 class="prop-title">Apartamento Costa Garrucha</h1>
+    <p class="prop-loc">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Garrucha, Almería
+    </p>
+    <div class="prop-price-big">185.000 €</div>
+
+    <div class="prop-features-row">
+      <div class="prop-feat"><span class="prop-feat-val">3</span><span class="prop-feat-lbl">Habitaciones</span></div>
+      <div class="prop-feat"><span class="prop-feat-val">2</span><span class="prop-feat-lbl">Baños</span></div>
+      <div class="prop-feat"><span class="prop-feat-val">120</span><span class="prop-feat-lbl">m²</span></div>
+      <div class="prop-feat"><span class="prop-feat-val">2ª</span><span class="prop-feat-lbl">Planta</span></div>
+    </div>
+
+    <h2 class="prop-section-title">Descripción</h2>
+    <p class="prop-p">Amplio apartamento situado a tan solo 2 minutos de la playa de Garrucha, con impresionantes vistas al mar desde el salón y la terraza principal. Distribuido en 3 habitaciones dobles, 2 baños completos y una luminosa cocina americana abierta al salón.</p>
+    <p class="prop-p">El inmueble se encuentra en perfecto estado de conservación, con carpintería de aluminio, suelos de porcelánico y climatización instalada. Ideal tanto para vivienda habitual como para inversión en alquiler vacacional, con alta demanda en la zona.</p>
+
+    <h2 class="prop-section-title">Características</h2>
+    <ul class="prop-list">
+      <li>Vistas al mar</li>
+      <li>Terraza amplia</li>
+      <li>Aire acondicionado</li>
+      <li>Garaje incluido</li>
+      <li>Trastero</li>
+      <li>Ascensor</li>
+      <li>Cocina equipada</li>
+      <li>Armarios empotrados</li>
+      <li>Calefacción</li>
+      <li>Orientación sur</li>
+    </ul>
+
+    <h2 class="prop-section-title">Zona</h2>
+    <p class="prop-p">Garrucha es uno de los municipios más atractivos del litoral de Almería. Su puerto pesquero, sus playas de bandera azul y su casco urbano dinámico lo convierten en un destino muy demandado tanto por residentes nacionales como extranjeros. Transporte público frecuente y acceso directo a la autovía A-7.</p>
+  </div>
+
+  <div class="prop-sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-price">185.000 €</div>
+      <div class="sidebar-ref">Ref: DP-001 · Apartamento</div>
+      <a href="https://wa.me/34687322541?text=Hola,%20me%20interesa%20el%20Apartamento%20Costa%20Garrucha%20(Ref%20DP-001).%20%C2%BFPodemos%20hablar%3F" target="_blank" class="btn-wa">CONTACTAR POR WHATSAPP</a>
+      <a href="tel:+34687322541" class="btn-call">📞 +34 687 322 541</a>
+      <a href="https://wa.me/34687322541?text=Hola,%20quisiera%20una%20valoraci%C3%B3n%20gratuita%20de%20mi%20inmueble" target="_blank" class="btn-val">¿Vendes un piso? Valoración GRATIS</a>
+      <div class="sidebar-info">
+        <div class="sidebar-info-row"><span>Tipo</span><span>Apartamento</span></div>
+        <div class="sidebar-info-row"><span>Superficie</span><span>120 m²</span></div>
+        <div class="sidebar-info-row"><span>Habitaciones</span><span>3</span></div>
+        <div class="sidebar-info-row"><span>Baños</span><span>2</span></div>
+        <div class="sidebar-info-row"><span>Planta</span><span>2ª con ascensor</span></div>
+        <div class="sidebar-info-row"><span>Estado</span><span>Muy buen estado</span></div>
+        <div class="sidebar-info-row"><span>Año construcción</span><span>2008</span></div>
+        <div class="sidebar-info-row"><span>Certificación energética</span><span>C</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROPIEDADES SIMILARES -->
+<div style="background:var(--off);padding:40px 0;">
+  <div class="similares">
+    <h2>Propiedades que también podrían interesarte</h2>
+    <div class="sim-grid">
+      <a href="propiedad-local.html" class="sim-card">
+        <div class="sim-img"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+        <div class="sim-body">
+          <div class="sim-name">Local Comercial Centro</div>
+          <div class="sim-feat">60 m² · Centro Garrucha</div>
+          <div class="sim-price">95.000 €</div>
+          <span class="sim-btn">VER DETALLES</span>
+        </div>
+      </a>
+      <a href="propiedad-terreno.html" class="sim-card">
+        <div class="sim-img"><svg viewBox="0 0 24 24"><polygon points="3 11 12 2 21 11 21 22 3 22"/></svg></div>
+        <div class="sim-body">
+          <div class="sim-name">Terreno Edificable</div>
+          <div class="sim-feat">2.000 m² · Las Negras, Almería</div>
+          <div class="sim-price">120.000 €</div>
+          <span class="sim-btn">VER DETALLES</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 DONPISO | Inmobiliaria Garrucha · <a href="index.html">Volver al inicio</a></p>
+</footer>
+</body>
+</html>
